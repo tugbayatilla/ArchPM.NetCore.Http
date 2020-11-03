@@ -10,7 +10,7 @@ using Moq.Protected;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace ArchPM.NetCore.Http
+namespace ArchPM.NetCore.Http.Extensions
 {
     public static class HttpClientExtensions
     {

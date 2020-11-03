@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using ArchPM.NetCore.Extensions;
+using ArchPM.NetCore.Http.Extensions;
 using ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Messages;
 
 namespace ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients
