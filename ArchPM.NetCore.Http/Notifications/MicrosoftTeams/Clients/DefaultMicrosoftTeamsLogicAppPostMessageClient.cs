@@ -10,9 +10,9 @@ namespace ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients
     public class DefaultMicrosoftTeamsLogicAppPostMessageClient : IMicrosoftTeamsLogicAppPostMessageClient
     {
         private readonly HttpClient _httpClient;
-        private readonly IMicrosoftTeamsLogicAppClientSettings _settings;
+        private readonly IMicrosoftTeamsLogicAppPostMessageClientSettings _settings;
 
-        public DefaultMicrosoftTeamsLogicAppPostMessageClient(HttpClient httpClient, IMicrosoftTeamsLogicAppClientSettings settings)
+        public DefaultMicrosoftTeamsLogicAppPostMessageClient(HttpClient httpClient, IMicrosoftTeamsLogicAppPostMessageClientSettings settings)
         {
             _httpClient = httpClient;
             _settings = settings;

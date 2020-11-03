@@ -12,11 +12,11 @@ namespace ArchPM.NetCore.Http.Tests
 {
     public class MicrosoftTeamsLogicAppPostMessageClientTests
     {
-        private DefaultMicrosoftTeamsLogicAppPostMessageClient CreateClient(IMicrosoftTeamsLogicAppClientSettings settings = null, HttpClient httpClient = null)
+        private DefaultMicrosoftTeamsLogicAppPostMessageClient CreateClient(IMicrosoftTeamsLogicAppPostMessageClientSettings settings = null, HttpClient httpClient = null)
         {
             if (settings == null)
             {
-                settings = new DefaultMicrosoftTeamsLogicAppClientSettings()
+                settings = new DefaultMicrosoftTeamsLogicAppPostMessageClientSettings()
                 {
                     Active = true,
                     EndpointUrl = "https://loremipsum.com/api/v1/postmessage"
@@ -42,7 +42,7 @@ namespace ArchPM.NetCore.Http.Tests
         public async Task SendMessage_should_return_empty_response_when_settings_is_not_active()
         {
 
-            var client = CreateClient(new DefaultMicrosoftTeamsLogicAppClientSettings()
+            var client = CreateClient(new DefaultMicrosoftTeamsLogicAppPostMessageClientSettings()
             {
                 Active = false
             });
