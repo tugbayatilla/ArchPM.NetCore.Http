@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchPM.NetCore.Http", "ArchPM.NetCore.Http\ArchPM.NetCore.Http.csproj", "{B7F7928D-1F63-4572-8BDC-E93B22089404}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchPM.NetCore.Http.Tests", "ArchPM.NetCore.Http.Tests\ArchPM.NetCore.Http.Tests.csproj", "{E1A52B0F-B89B-46BA-AA1B-1CE943944D81}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B7F7928D-1F63-4572-8BDC-E93B22089404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7F7928D-1F63-4572-8BDC-E93B22089404}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7F7928D-1F63-4572-8BDC-E93B22089404}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7F7928D-1F63-4572-8BDC-E93B22089404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1A52B0F-B89B-46BA-AA1B-1CE943944D81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1A52B0F-B89B-46BA-AA1B-1CE943944D81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1A52B0F-B89B-46BA-AA1B-1CE943944D81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1A52B0F-B89B-46BA-AA1B-1CE943944D81}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8E7EF570-BFAE-4006-A0C0-136B697689AF}
+	EndGlobalSection
+EndGlobal
