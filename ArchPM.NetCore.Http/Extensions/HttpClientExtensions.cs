@@ -4,59 +4,56 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ArchPM.NetCore.Extensions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace ArchPM.NetCore.Http.Extensions
 {
     public static class HttpClientExtensions
     {
-        public static async Task<TResponse> Request<TResponse>(this HttpClient httpClient, string requestUri, HttpMethod httpMethod, object data, ILogger logger = null)
+        public static async Task<TResponse> Request<TResponse>(this HttpClient httpClient, Action<HttpRequestConfiguration> configAction)
         {
-            logger?.LogTrace($"Start sending a request: {httpMethod.Method} {requestUri}");
-            var requestMessage = new HttpRequestMessage(httpMethod, requestUri);
+            configAction.ThrowExceptionIfNull<ArgumentNullException>($"{nameof(configAction)} must be implemented!");
+            var config = new HttpRequestConfiguration();
+            configAction(config);
 
-            if (data != null)
+            config.Logger?.LogTrace($"Start sending a request: {config.HttpMethod.Method} {config.RequestUri}");
+            var requestMessage = new HttpRequestMessage(config.HttpMethod, config.RequestUri);
+
+            if (config.Data != null)
             {
-                logger?.LogTrace("Payload given, start handling serialization...");
-                var jsonPayload = JsonConvert.SerializeObject(data, new JsonSerializerSettings()
-                {
-                    ContractResolver = new DefaultContractResolver
-                    {
-                        NamingStrategy = new CamelCaseNamingStrategy()
-                    },
-                    NullValueHandling = NullValueHandling.Ignore
-                });
-                logger?.LogDebug($"Serialized data: {jsonPayload}");
+                config.Logger?.LogTrace("Payload given, start handling serialization...");
+                var jsonData = JsonConvert.SerializeObject(config.Data, config.SerializeSettings);
+                config.Logger?.LogDebug($"Serialized data: {jsonData}");
 
-                logger?.LogDebug($"Sending HttpRequest: {httpMethod.Method} {requestUri}");
-                requestMessage.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                config.Logger?.LogDebug($"Sending HttpRequest: {config.HttpMethod.Method} {config.RequestUri}");
+                requestMessage.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
             }
 
-            logger?.LogTrace("Sending request...");
+            config.Logger?.LogTrace("Sending request...");
             var responseMessage = await httpClient.SendAsync(requestMessage);
-            logger?.LogDebug($"Got a response: {responseMessage.StatusCode}");
+            config.Logger?.LogDebug($"Got a response: {responseMessage.StatusCode}");
 
-            if ((int)responseMessage.StatusCode >= 200 && (int)responseMessage.StatusCode <= 300)
+            if ((int)responseMessage.StatusCode >= config.MinResponseCode && (int)responseMessage.StatusCode <= config.MaxResponseCode)
             {
                 var content = await responseMessage.Content.ReadAsStringAsync();
-                var proFileResponses = JsonConvert.DeserializeObject<TResponse>(content);
+                var proFileResponses = JsonConvert.DeserializeObject<TResponse>(content, config.DeserializeSettings);
 
-                logger?.LogDebug($"Response content was deserialized to {typeof(TResponse).Name}. Response: {content}");
+                config.Logger?.LogDebug($"Response content was deserialized to {typeof(TResponse).Name}. Response: {content}");
 
                 return proFileResponses;
             }
 
             if (responseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                logger?.LogDebug("The API returned 404 - Not Found. Returns null.");
+                config.Logger?.LogDebug("The API returned 404 - Not Found. Returns null.");
                 return default;
             }
 
-            logger?.LogDebug("The API returned something else than 404 or [200:300] range. Exception will be thrown.");
+            config.Logger?.LogDebug("The API returned something else than 404 or [200:300] range. Exception will be thrown.");
             var errorContent = await responseMessage.Content.ReadAsStringAsync();
             throw new Exception(
                 $"Request resulted in error. StatusCode: {responseMessage.StatusCode}. Response: {errorContent}"

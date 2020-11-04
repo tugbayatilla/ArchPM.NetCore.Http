@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.2</Version>
-    <AssemblyVersion>2.0.2.0</AssemblyVersion>
+    <Version>2.0.3</Version>
+    <AssemblyVersion>2.0.3.0</AssemblyVersion>
     <Authors>Tugbay Atilla</Authors>
     <Description>ArchPM .NetCore Core Http Operations for net standard</Description>
     <Copyright>© 2019 Tugbay Atilla</Copyright>
@@ -15,7 +15,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageReleaseNotes>reference dll downgrade</PackageReleaseNotes>
+    <PackageReleaseNotes>Request enhanced</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -30,9 +30,12 @@ namespace ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients
             message.ThrowExceptionIf(p => string.IsNullOrEmpty(p.MessageId), new ArgumentException($"{nameof(message.MessageId)} is null or empty!"));
 
             var response = await _httpClient.Request<DefaultMicrosoftTeamsReplyMessageResponse>(
-                _settings.EndpointUrl,
-                HttpMethod.Post,
-                message
+                p =>
+                {
+                    p.RequestUri = _settings.EndpointUrl;
+                    p.HttpMethod = HttpMethod.Post;
+                    p.Data = message;
+                }
             );
 
             response.ThrowExceptionIfNull<Exception>($"{nameof(response)} is null!");
