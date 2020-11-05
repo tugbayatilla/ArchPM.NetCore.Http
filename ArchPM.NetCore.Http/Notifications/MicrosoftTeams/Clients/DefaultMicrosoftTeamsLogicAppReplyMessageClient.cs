@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ArchPM.NetCore.Extensions;
 using ArchPM.NetCore.Http.Extensions;
+using ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients.Settings;
 using ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Messages;
 
 namespace ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients
@@ -10,9 +11,9 @@ namespace ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients
     public class DefaultMicrosoftTeamsLogicAppReplyMessageClient : IMicrosoftTeamsLogicAppReplyMessageClient
     {
         private readonly HttpClient _httpClient;
-        private readonly IMicrosoftTeamsLogicAppReplyMessageClientSettings _settings;
+        private readonly DefaultMicrosoftTeamsLogicAppReplyMessageClientSettings _settings;
 
-        public DefaultMicrosoftTeamsLogicAppReplyMessageClient(HttpClient httpClient, IMicrosoftTeamsLogicAppReplyMessageClientSettings settings)
+        public DefaultMicrosoftTeamsLogicAppReplyMessageClient(HttpClient httpClient, DefaultMicrosoftTeamsLogicAppReplyMessageClientSettings settings)
         {
             _httpClient = httpClient;
             _settings = settings;

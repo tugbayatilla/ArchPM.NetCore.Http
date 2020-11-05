@@ -14,6 +14,14 @@ namespace ArchPM.NetCore.Http.Extensions
 {
     public static class HttpClientExtensions
     {
+        /// <summary>
+        /// Requests the specified configuration action.
+        /// </summary>
+        /// <typeparam name="TResponse">The type of the response.</typeparam>
+        /// <param name="httpClient">The HTTP client.</param>
+        /// <param name="configAction">The configuration action.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception">Request resulted in error. StatusCode: {responseMessage.StatusCode}. Response: {errorContent}</exception>
         public static async Task<TResponse> Request<TResponse>(this HttpClient httpClient, Action<HttpRequestConfiguration> configAction)
         {
             configAction.ThrowExceptionIfNull<ArgumentNullException>($"{nameof(configAction)} must be implemented!");
@@ -60,6 +68,12 @@ namespace ArchPM.NetCore.Http.Extensions
             );
         }
 
+        /// <summary>
+        /// Creates the mock HTTP client.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="resultObject">The result object.</param>
+        /// <returns></returns>
         public static HttpClient CreateMockHttpClient<T>(T resultObject)
         {
             var mockMessageHandler = new Mock<HttpMessageHandler>();

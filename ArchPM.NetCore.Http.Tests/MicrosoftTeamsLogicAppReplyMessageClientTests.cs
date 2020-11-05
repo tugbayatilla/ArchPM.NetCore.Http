@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ArchPM.NetCore.Builders;
 using ArchPM.NetCore.Http.Extensions;
 using ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients;
+using ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients.Settings;
 using ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Messages;
 using FluentAssertions;
 using Xunit;
@@ -12,7 +13,7 @@ namespace ArchPM.NetCore.Http.Tests
 {
     public class MicrosoftTeamsLogicAppReplyMessageClientTests
     {
-        private DefaultMicrosoftTeamsLogicAppReplyMessageClient CreateClient(IMicrosoftTeamsLogicAppReplyMessageClientSettings settings = null, HttpClient httpClient = null)
+        private DefaultMicrosoftTeamsLogicAppReplyMessageClient CreateClient(DefaultMicrosoftTeamsLogicAppReplyMessageClientSettings settings = null, HttpClient httpClient = null)
         {
             if (settings == null)
             {

@@ -25,4 +25,13 @@
     <ProjectReference Include="..\ArchPM.NetCore.Http\ArchPM.NetCore.Http.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="ConfigFiles\appsettings.missing.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ConfigFiles\appsettings.valid.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
