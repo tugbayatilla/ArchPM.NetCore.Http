@@ -77,6 +77,7 @@ namespace ArchPM.NetCore.Http.Tests
                 );
             postSettings.Should().NotBeNull();
             postSettings?.Lifetime.Should().Be(ServiceLifetime.Singleton);
+           
 
             var replySettings = service.ToList()
                 .FirstOrDefault(
@@ -102,6 +103,50 @@ namespace ArchPM.NetCore.Http.Tests
                 );
             replyClient.Should().NotBeNull();
             replyClient?.Lifetime.Should().Be(ServiceLifetime.Transient);
+
+
+            using (var provider = service.BuildServiceProvider())
+            {
+                var postSettingsInstance = provider.GetService<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>();
+                postSettingsInstance.Active.Should().BeTrue();
+                postSettingsInstance.EndpointUrl.Should().Be("https://loremipsum.com/api/v2/post");
+
+                var replySettingsInstance = provider.GetService<DefaultMicrosoftTeamsLogicAppReplyMessageClientSettings>();
+                replySettingsInstance.Active.Should().BeTrue();
+                replySettingsInstance.EndpointUrl.Should().Be("https://loremipsum.com/api/v2/reply");
+            }
+
+        }
+
+        [Fact]
+        public void AddDefaultMicrosoftTeamsClientSettings_Should_work_with_config_when_use_post_is_false()
+        {
+            var service = CreateServiceCollection();
+
+            service.AddDefaultMicrosoftTeamsClientSettings(
+                p => { p.UsePostMessageClient = false; });
+
+
+            var postSettings = service.ToList()
+                .FirstOrDefault(
+                    p => p.ServiceType ==
+                        typeof(DefaultMicrosoftTeamsLogicAppPostMessageClientSettings)
+                );
+            postSettings.Should().BeNull();
+
+            var postClient = service.ToList()
+                .FirstOrDefault(
+                    p => p.ServiceType ==
+                        typeof(IMicrosoftTeamsLogicAppPostMessageClient)
+                );
+            postClient.Should().BeNull();
+
+            using (var provider = service.BuildServiceProvider())
+            {
+                var postSettingsInstance = provider.GetService<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>();
+                postSettingsInstance.Should().BeNull();
+            }
+
         }
     }
 }

@@ -18,34 +18,45 @@ namespace ArchPM.NetCore.Http.Extensions
             {
                 var configuration = provider.GetService<IConfiguration>();
 
-                var postSettingsObj =
-                    ParseConfig<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>(
-                        configuration,
-                        settings.PostMessageClientConfigSectionName
+                if (settings.UsePostMessageClient)
+                {
+                    var postSettingsObj =
+                        ParseConfig<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>(
+                            configuration,
+                            settings.PostMessageClientConfigSectionName
+                        );
+                    postSettingsObj.ThrowExceptionIfNull<Exception>(
+                        $"{nameof(settings.PostMessageClientConfigSectionName)} section could not be loaded into {nameof(DefaultMicrosoftTeamsLogicAppPostMessageClientSettings)}!"
                     );
-                postSettingsObj.ThrowExceptionIfNull<Exception>(
-                    $"{nameof(settings.PostMessageClientConfigSectionName)} section could not be loaded into {nameof(DefaultMicrosoftTeamsLogicAppPostMessageClientSettings)}!"
-                );
-                var replySettingsObj =
-                    ParseConfig<DefaultMicrosoftTeamsLogicAppReplyMessageClientSettings>(
-                        configuration,
-                        settings.PostMessageClientConfigSectionName
+                    services.AddSingleton(postSettingsObj);
+                    services
+                        .AddHttpClient<IMicrosoftTeamsLogicAppPostMessageClient,
+                            DefaultMicrosoftTeamsLogicAppPostMessageClient>();
+                }
+
+                if (settings.UseReplyMessageClient)
+                {
+                    var replySettingsObj =
+                        ParseConfig<DefaultMicrosoftTeamsLogicAppReplyMessageClientSettings>(
+                            configuration,
+                            settings.ReplyMessageClientConfigSectionName
+                        );
+                    replySettingsObj.ThrowExceptionIfNull<Exception>(
+                        $"{nameof(settings.ReplyMessageClientConfigSectionName)} section could not be loaded into {nameof(DefaultMicrosoftTeamsLogicAppReplyMessageClientSettings)}!"
                     );
-                replySettingsObj.ThrowExceptionIfNull<Exception>(
-                    $"{nameof(settings.ReplyMessageClientConfigSectionName)} section could not be loaded into {nameof(DefaultMicrosoftTeamsLogicAppReplyMessageClientSettings)}!"
-                );
 
-
-                services.AddSingleton(postSettingsObj);
-                services.AddSingleton(replySettingsObj);
-
-                services.AddHttpClient<IMicrosoftTeamsLogicAppPostMessageClient, DefaultMicrosoftTeamsLogicAppPostMessageClient>();
-                services.AddHttpClient<IMicrosoftTeamsLogicAppReplyMessageClient, DefaultMicrosoftTeamsLogicAppReplyMessageClient>();
+                    services.AddSingleton(replySettingsObj);
+                    services
+                        .AddHttpClient<IMicrosoftTeamsLogicAppReplyMessageClient,
+                            DefaultMicrosoftTeamsLogicAppReplyMessageClient>();
+                }
             }
         }
 
         public class ClientConfigSettings
         {
+            public bool UsePostMessageClient { get; set; } = true;
+            public bool UseReplyMessageClient { get; set; } = true;
             public string PostMessageClientConfigSectionName { get; set; } = "PostMessageSettings";
             public string ReplyMessageClientConfigSectionName { get; set; } = "ReplyMessageSettings";
         }
