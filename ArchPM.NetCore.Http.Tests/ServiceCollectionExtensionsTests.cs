@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Runtime.CompilerServices;
 using ArchPM.NetCore.Http.Extensions;
 using ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients;
 using ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients.Settings;
