@@ -9,10 +9,10 @@ namespace ArchPM.NetCore.Http.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddDefaultMicrosoftTeamsClientSettings(this IServiceCollection services, Action<ClientConfigSettings> configSettings)
+        public static void AddDefaultMicrosoftTeamsClientSettings(this IServiceCollection services, Action<ClientConfigSettings> configSettings = null)
         {
             var settings = new ClientConfigSettings();
-            configSettings(settings);
+            configSettings?.Invoke(settings);
 
             using (var provider = services.BuildServiceProvider())
             {
