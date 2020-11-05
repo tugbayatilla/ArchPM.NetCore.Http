@@ -37,9 +37,9 @@ namespace ArchPM.NetCore.Http.Extensions
 
 
                 services.AddSingleton(postSettingsObj);
-                services.AddSingleton(postSettingsObj);
+                services.AddSingleton(replySettingsObj);
 
-                services.AddHttpClient<IMicrosoftTeamsLogicAppPostMessageClient,DefaultMicrosoftTeamsLogicAppPostMessageClient>();
+                services.AddHttpClient<IMicrosoftTeamsLogicAppPostMessageClient, DefaultMicrosoftTeamsLogicAppPostMessageClient>();
                 services.AddHttpClient<IMicrosoftTeamsLogicAppReplyMessageClient, DefaultMicrosoftTeamsLogicAppReplyMessageClient>();
             }
         }

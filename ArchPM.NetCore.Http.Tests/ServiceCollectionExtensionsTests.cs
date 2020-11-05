@@ -1,7 +1,11 @@
+using System.Linq;
+using System.Runtime.CompilerServices;
 using ArchPM.NetCore.Http.Extensions;
+using ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients;
 using ArchPM.NetCore.Http.Notifications.MicrosoftTeams.Clients.Settings;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace ArchPM.NetCore.Http.Tests
@@ -49,5 +53,56 @@ namespace ArchPM.NetCore.Http.Tests
             settings.Should().BeNull();
         }
 
+
+        private IServiceCollection CreateServiceCollection()
+        {
+            var service = new ServiceCollection();
+            service.AddSingleton(CreateConfiguration("appsettings.valid.json"));
+
+            return service;
+        }
+
+
+        [Fact]
+        public void AddDefaultMicrosoftTeamsClientSettings_Should_throw_exception_when_invalid_config_for_post()
+        {
+            var service = CreateServiceCollection();
+
+            service.AddDefaultMicrosoftTeamsClientSettings();
+
+
+            var postSettings = service.ToList()
+                .FirstOrDefault(
+                    p => p.ServiceType ==
+                        typeof(DefaultMicrosoftTeamsLogicAppPostMessageClientSettings)
+                );
+            postSettings.Should().NotBeNull();
+            postSettings?.Lifetime.Should().Be(ServiceLifetime.Singleton);
+
+            var replySettings = service.ToList()
+                .FirstOrDefault(
+                    p => p.ServiceType ==
+                        typeof(DefaultMicrosoftTeamsLogicAppReplyMessageClientSettings)
+                );
+
+            replySettings.Should().NotBeNull();
+            replySettings?.Lifetime.Should().Be(ServiceLifetime.Singleton);
+
+            var postClient = service.ToList()
+                .FirstOrDefault(
+                    p => p.ServiceType ==
+                        typeof(IMicrosoftTeamsLogicAppPostMessageClient)
+                );
+            postClient.Should().NotBeNull();
+            postClient?.Lifetime.Should().Be(ServiceLifetime.Transient);
+
+            var replyClient = service.ToList()
+                .FirstOrDefault(
+                    p => p.ServiceType ==
+                        typeof(IMicrosoftTeamsLogicAppReplyMessageClient)
+                );
+            replyClient.Should().NotBeNull();
+            replyClient?.Lifetime.Should().Be(ServiceLifetime.Transient);
+        }
     }
 }
