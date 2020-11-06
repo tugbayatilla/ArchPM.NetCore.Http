@@ -9,6 +9,11 @@ namespace ArchPM.NetCore.Http.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds the default microsoft teams client settings.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="configSettings">The configuration settings.</param>
         public static void AddDefaultMicrosoftTeamsClientSettings(this IServiceCollection services, Action<ClientConfigSettings> configSettings = null)
         {
             var settings = new ClientConfigSettings();
@@ -21,7 +26,7 @@ namespace ArchPM.NetCore.Http.Extensions
                 if (settings.UsePostMessageClient)
                 {
                     var postSettingsObj =
-                        ParseConfig<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>(
+                        CreateFromAppSettings<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>(
                             configuration,
                             settings.PostMessageClientConfigSectionName
                         );
@@ -37,7 +42,7 @@ namespace ArchPM.NetCore.Http.Extensions
                 if (settings.UseReplyMessageClient)
                 {
                     var replySettingsObj =
-                        ParseConfig<DefaultMicrosoftTeamsLogicAppReplyMessageClientSettings>(
+                        CreateFromAppSettings<DefaultMicrosoftTeamsLogicAppReplyMessageClientSettings>(
                             configuration,
                             settings.ReplyMessageClientConfigSectionName
                         );
@@ -62,34 +67,21 @@ namespace ArchPM.NetCore.Http.Extensions
         }
 
         /// <summary>
-        /// Parses the configuration.
+        /// Creates from application settings.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="configuration">The configuration.</param>
         /// <param name="sectionName">Name of the section.</param>
         /// <returns></returns>
-        public static T ParseConfig<T>(this IConfiguration configuration, string sectionName) where T : new()
+        public static T CreateFromAppSettings<T>(this IConfiguration configuration, string sectionName) where T : new()
         {
+            var entity = new T();
             var section = configuration.GetSection(sectionName);
             if (!section.Exists())
             {
                 return default;
             }
-
-            var entity = new T();
-            var properties = entity.CollectProperties(p => p.IsPrimitive);
-            foreach (var propertyDto in properties)
-            {
-                try
-                {
-                    entity.SetValue(propertyDto.Name, section[propertyDto.Name]);
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
-
+            section.Bind(entity);
             return entity;
         }
     }

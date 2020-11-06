@@ -23,7 +23,7 @@ namespace ArchPM.NetCore.Http.Tests
         {
             var configuration = CreateConfiguration("appsettings.valid.json");
 
-            var settings = configuration.ParseConfig<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>("PostMessageSettings");
+            var settings = configuration.CreateFromAppSettings<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>("PostMessageSettings");
 
             settings.Should().NotBeNull();
             settings.Active.Should().BeTrue();
@@ -36,7 +36,7 @@ namespace ArchPM.NetCore.Http.Tests
         {
             var configuration = CreateConfiguration("appsettings.valid.json");
 
-            var settings = configuration.ParseConfig<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>("NotExistConfig");
+            var settings = configuration.CreateFromAppSettings<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>("NotExistConfig");
 
             settings.Should().BeNull();
 
@@ -47,9 +47,21 @@ namespace ArchPM.NetCore.Http.Tests
         {
             var configuration = CreateConfiguration("appsettings.missing.json");
 
-            var settings = configuration.ParseConfig<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>("PostMessageSettings");
+            var settings = configuration.CreateFromAppSettings<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>("PostMessageSettings");
 
             settings.Should().BeNull();
+        }
+
+        [Fact]
+        public void ParseConfig_Should_Be_Valid_When_structured_Json_existing_config()
+        {
+            var configuration = CreateConfiguration("appsettings.valid.structured.json");
+
+            var settings = configuration.CreateFromAppSettings<DefaultMicrosoftTeamsLogicAppPostMessageClientSettings>("Settings:PostMessageSettings");
+
+            settings.Should().NotBeNull();
+            settings.Active.Should().BeTrue();
+            settings.EndpointUrl.Should().Be("https://loremipsum.com/api/v2/post");
         }
 
 
